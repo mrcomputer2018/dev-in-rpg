@@ -2,6 +2,7 @@ package rpg.classes;
 
 import rpg.enums.TipoArmaEnum;
 import rpg.enums.TipoClasseEnum;
+import rpg.enums.TipoMotivacaoEnum;
 import rpg.enums.TipoSexoEnum;
 
 import java.util.ArrayList;
@@ -12,9 +13,8 @@ public class Logica {
     static PersonagemJogavel jogador;
 
     public static void continuar() {
-        System.out.println("Pressione qualquer tecla para continuar...");
-        input.next();
-        limpaConsole();
+        System.out.println("Pressione ENTER para continuar...");
+        input.nextLine();
     }
 
     public static void limpaConsole() {
@@ -23,7 +23,7 @@ public class Logica {
         }
     }
 
-    private static int confirmaEscolha() {
+    public static int confirmaEscolha() {
         int confirmacao;
         try {
             confirmacao = Integer.parseInt(input.nextLine());
@@ -34,7 +34,14 @@ public class Logica {
         return confirmacao;
     }
 
-    private static TipoArmaEnum getTipoArmaPersonagem(TipoClasseEnum tipoClasse) {
+    public static void linhaSeparadora() {
+        for (int i = 0; i < 100; i++) {
+            System.out.print("-");
+        }
+        System.out.println();
+    }
+
+    public static TipoArmaEnum getTipoArmaPersonagem(TipoClasseEnum tipoClasse) {
         int confirmacao;
         int arma;
         ArrayList<TipoArmaEnum> armasClasse = tipoClasse.getTipoArmaEnums();
@@ -61,7 +68,7 @@ public class Logica {
         return tipoArma;
     }
 
-    private static TipoClasseEnum getClassePersonagem() {
+    public static TipoClasseEnum getClassePersonagem() {
         int confirmacao;
         int classe;
         TipoClasseEnum tipoClasse = null;
@@ -87,7 +94,7 @@ public class Logica {
         return tipoClasse;
     }
 
-    private static TipoSexoEnum getSexoPersonagem() {
+    public static TipoSexoEnum getSexoPersonagem() {
         int confirmacao;
         int sexo = 0;
         TipoSexoEnum tipoSexo = null;
@@ -115,7 +122,7 @@ public class Logica {
         return tipoSexo;
     }
 
-    private static String getNomePersonagem() {
+    public static String getNomePersonagem() {
         int confirmacao;
         String nome;
         do {
@@ -125,6 +132,34 @@ public class Logica {
             confirmacao = confirmaEscolha();
         } while (confirmacao != 1);
         return nome;
+    }
+
+    public static String getMotivacaoPersonagem() {
+        int confirmacao;
+        int motivacao;
+        TipoMotivacaoEnum tipoMotivacao = null;
+        do {
+            System.out.println("Qual a motivação do seu personagem?");
+            for (TipoMotivacaoEnum motivacaoEnum : TipoMotivacaoEnum.values()) {
+                System.out.println(motivacaoEnum.ordinal() + ". " + motivacaoEnum.getMotivacao());
+            }
+            try {
+                motivacao = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                motivacao = TipoMotivacaoEnum.values().length;
+            }
+            if (motivacao >= TipoMotivacaoEnum.values().length) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                tipoMotivacao = TipoMotivacaoEnum.values()[motivacao];
+                System.out.println("A motivação do seu personagem é \"" + tipoMotivacao + "\"? Aperte 1 para confirmar ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1);
+        jogador.setTipoMotivacao(tipoMotivacao.getMotivacao());
+        linhaSeparadora();
+        return tipoMotivacao.getTextoMotivacao();
     }
 
     public static void criacaoPersonagem() {

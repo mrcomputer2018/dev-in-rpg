@@ -1,5 +1,6 @@
 package rpg.game;
 
+import rpg.classes.Historia;
 import rpg.classes.Logica;
 import rpg.classes.PersonagemJogavel;
 import rpg.enums.TipoArmaEnum;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 
 public class Game {
     public static void main(String[] args) {
-        Logica.criacaoPersonagem();
+        Historia.atoUm();
+        Historia.atoDois();
     }
 }

@@ -1,10 +1,14 @@
 package rpg.classes;
 
+import lombok.Setter;
 import rpg.enums.TipoArmaEnum;
 import rpg.enums.TipoClasseEnum;
 import rpg.enums.TipoSexoEnum;
 
 public class PersonagemJogavel extends Personagem {
+    @Setter
+    private String tipoMotivacao;
+
     public PersonagemJogavel(String nome, TipoSexoEnum sexo, TipoClasseEnum classe, TipoArmaEnum arma) {
         this.nome = nome;
         this.sexo = sexo;
