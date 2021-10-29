@@ -1,16 +1,24 @@
 package rpg.classes;
 
-import rpg.enums.TipoArmaEnum;
-import rpg.enums.TipoClasseEnum;
-import rpg.enums.TipoMotivacaoEnum;
-import rpg.enums.TipoSexoEnum;
+import rpg.enums.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Logica {
     static Scanner input = new Scanner(System.in);
+    static TipoNivelEnum nivel;
     static PersonagemJogavel jogador;
+    static Random random = new Random();
+
+    public static String getJogador() {
+        return jogador.toString();
+    }
+
+    public static int rolarDado(int facesDados) {
+        return 1 + Logica.random.nextInt(facesDados);
+    }
 
     public static void continuar() {
         System.out.println("Pressione ENTER para continuar...");
@@ -39,6 +47,45 @@ public class Logica {
             System.out.print("-");
         }
         System.out.println();
+    }
+
+    public static void criacaoPersonagem() {
+        String nome = getNomePersonagem();
+        TipoSexoEnum tipoSexo = getSexoPersonagem();
+        TipoClasseEnum tipoClasse = getClassePersonagem();
+        TipoArmaEnum tipoArma = getTipoArmaPersonagem(tipoClasse);
+        TipoNivelEnum tipoNivel = getTipoNivelJogo();
+
+        jogador = new PersonagemJogavel(nome, tipoSexo, tipoClasse, tipoArma);
+        Logica.nivel = tipoNivel;
+        System.out.println(jogador);
+        continuar();
+    }
+
+    private static TipoNivelEnum getTipoNivelJogo() {
+        int confirmacao;
+        int nivel;
+        TipoNivelEnum tipoNivel = null;
+        do {
+            System.out.println("Qual a dificuldade do jogo?");
+            for (TipoNivelEnum nivelEnum : TipoNivelEnum.values()) {
+                System.out.println(nivelEnum.ordinal() + ". " + nivelEnum);
+            }
+            try {
+                nivel = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                nivel = TipoNivelEnum.values().length;
+            }
+            if (nivel >= TipoNivelEnum.values().length) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                tipoNivel = TipoNivelEnum.values()[nivel];
+                System.out.println("A dificuldade do jogo é \"" + tipoNivel + "\"? Aperte 1 para confirmar ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1);
+        return tipoNivel;
     }
 
     public static TipoArmaEnum getTipoArmaPersonagem(TipoClasseEnum tipoClasse) {
@@ -109,7 +156,6 @@ public class Logica {
                 sexo = TipoSexoEnum.values().length;
             }
             if (sexo >= TipoSexoEnum.values().length) {
-                System.out.println(sexo);
                 System.out.println("A opção escolhida é inválida!");
                 confirmacao = 2;
             } else {
@@ -157,19 +203,233 @@ public class Logica {
                 confirmacao = confirmaEscolha();
             }
         } while (confirmacao != 1);
-        jogador.setTipoMotivacao(tipoMotivacao.getMotivacao());
+        jogador.setTipoMotivacao(tipoMotivacao);
         linhaSeparadora();
         return tipoMotivacao.getTextoMotivacao();
     }
 
-    public static void criacaoPersonagem() {
-        String nome = getNomePersonagem();
-        TipoSexoEnum tipoSexo = getSexoPersonagem();
-        TipoClasseEnum tipoClasse = getClassePersonagem();
-        TipoArmaEnum tipoArma = getTipoArmaPersonagem(tipoClasse);
+    public static void atoTresSeguirOuDesistir() {
+        int escolha;
+        int confirmacao;
+        do {
+            Logica.linhaSeparadora();
+            System.out.println("""
+                    O que você irá fazer?
+                    1. DESISTIR
+                    2. SEGUIR EM FRENTE""");
 
-        jogador = new PersonagemJogavel(nome, tipoSexo, tipoClasse, tipoArma);
-        System.out.println(jogador);
+            try {
+                escolha = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                escolha = 3;
+            }
+
+            if (escolha > 2 || escolha < 1) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                String acao = escolha == 1 ? "DESISTIR" : "SEGUIR EM FRENTE";
+                System.out.println("Você irá " + acao + "? Aperte 1 para confirmar sua ação ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1);
+
+        if (escolha == 1) {
+            Logica.linhaSeparadora();
+            System.out.println("" +
+                    "O medo invade o seu coração e você sente que ainda não está à altura do desafio. Você se volta \n" +
+                    "para a noite lá fora e corre em direção à segurança.");
+            System.exit(0);
+            return;
+        }
+
+        Logica.linhaSeparadora();
+        System.out.println("" +
+                "Você caminha, atento a todos os seus sentidos, por vários metros, até visualizar a frente uma fonte \n" +
+                "de luz, que você imagina ser a chama de uma tocha, vindo de dentro de uma porta aberta.");
+    }
+
+    public static void atoTresSaltarAndarOuCorrer() {
+        int escolha;
+        int confirmacao;
+        do {
+            System.out.println("""
+                    Como você irá passar pela porta?
+                    1. SALTANDO
+                    2. ANDANDO
+                    3. CORRENDO""");
+
+            try {
+                escolha = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                escolha = 4;
+            }
+
+            if (escolha > 3 || escolha < 1) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                System.out.println("Aperte 1 para confirmar sua ação ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1);
+
+        if (escolha == 1) {
+            Logica.linhaSeparadora();
+            System.out.println("""
+                    Você se concentra e pula em direção à luz, saltando de antes da porta até o interior da sala.""");
+            return;
+        }
+
+        if (escolha == 2) {
+            Logica.linhaSeparadora();
+            System.out.println("""
+                    Você toma cuidado e vai caminhando vagarosamente em direção à luz. Quando você pisa exatamente
+                    embaixo da porta, você sente o chão ceder levemente, como se tivesse pisado em uma pedra solta.
+                    Você ouve um ruído de mecanismos se movimentando, e uma escotilha se abre no teto atrás de você,
+                    no corredor. Flechas voam da escotilha em sua direção, e você salta para dentro da sala, porém uma
+                    delas te acerta na perna.""");
+            int danoRecebido = Logica.rolarDado(10);
+            jogador.diminuirVida(danoRecebido);
+            Logica.linhaSeparadora();
+            System.out.println("Você recebeu " + danoRecebido + " de dano!\n" +
+                    "Sua vida atual é de " + jogador.getPontosDeVida() + " pontos de vida.");
+            return;
+        }
+
+        Logica.linhaSeparadora();
+        System.out.println("""
+                Você respira fundo e desata a correr em direção à sala. Quando passa pela porta, sente que pisou em
+                uma pedra solta, mas não dá muita importância e segue para dentro da sala, olhando ao redor à procura
+                de inimigos. Não tem ninguém, mas você ouve sons de flechas batendo na pedra atrás de você, e quando
+                se vira, vê várias flechas no chão. Espiando pela porta, você entende que pisou em uma armadilha que
+                soltou flechas de uma escotilha aberta no teto, mas por sorte você entrou correndo e conseguiu escapar
+                desse ataque surpresa.""");
+    }
+
+    public static void atoQuatroCombateArmeiro() {
+        Combate combate = new Combate(Logica.jogador, new PersonagemNaoJogavel(TipoInimigoEnum.ARMEIRO));
+        combate.iniciarCombate();
+        System.out.println("" +
+                "Após derrotar o Armeiro, você percebe que seus equipamentos estão muito danificados, e olha \n" +
+                "em volta, encarando todas aquelas peças de armaduras resistentes e em ótimo estado.");
+        int confirmacao;
+        int escolha;
+        do {
+            linhaSeparadora();
+            System.out.println("""
+                    O que você desejar fazer?
+                    1. USAR ARMADURA DO INIMIGO
+                    2. SEGUIR EM FRENTE""");
+            try {
+                escolha = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                escolha = 3;
+            }
+            if (escolha > 2) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                String tipoEscolha = escolha == 1 ? "USAR ARMADURA DO INIMIGO" : "SEGUIR EM FRENTE";
+                System.out.println("Você irá \"" + tipoEscolha + "\"? Aperte 1 para confirmar ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1);
+        linhaSeparadora();
+        if (escolha == 1) {
+            System.out.println("""
+                    Você resolve usar os equipamentos do inimigo contra ele, e trocar algumas peças suas, que estavam
+                    danificadas, pelas peças de armaduras existentes na sala. De armadura nova, você se sente mais
+                    protegido para os desafios à sua frente.""");
+            int pontosDeArmaduraAntes = jogador.getPontosDeArmadura();
+            jogador.setPontosDeArmadura(pontosDeArmaduraAntes + 5);
+            int pontosDeArmaduraDepois = jogador.getPontosDeArmadura();
+            linhaSeparadora();
+            System.out.println("Seus pontos de armadura subiram de " + pontosDeArmaduraAntes + " pontos para " + pontosDeArmaduraDepois + " pontos!");
+            linhaSeparadora();
+            continuar();
+            return;
+        }
+
+        System.out.println("Você decide que não precisa utilizar nada que venha das mãos do inimigo.");
+        linhaSeparadora();
+        continuar();
+    }
+
+    public static void atoCincoCombateAlquimista() {
+        Combate combate = new Combate(Logica.jogador, new PersonagemNaoJogavel(TipoInimigoEnum.ALQUIMISTA));
+        combate.iniciarCombate();
+        System.out.println("""
+                Após derrotar o Alquimista, você olha em volta, tentando reconhecer alguma poção do estoque do inimigo.\s
+                Em uma mesa, você reconhece uma pequena garrafa de vidro contendo um líquido levemente rosado, pega a\s
+                garrafa e pondera se deve beber um gole.""");
+        int confirmacao;
+        int escolha;
+        do {
+            linhaSeparadora();
+            System.out.println("""
+                    O que você desejar fazer?
+                    1. BEBER A POÇÃO
+                    2. NÃO BEBER A POÇÃO E SEGUIR EM FRENTE""");
+            try {
+                escolha = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                escolha = 3;
+            }
+            if (escolha > 2) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                String tipoEscolha = escolha == 1 ? "BEBER A POÇÃO" : "NÃO BEBER A POÇÃO E SEGUIR EM FRENTE";
+                System.out.println("Você irá \"" + tipoEscolha + "\"? Aperte 1 para confirmar ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1);
+        linhaSeparadora();
+        if (escolha == 1) {
+            System.out.println("""
+                    Você se sente revigorado para seguir adiante!""");
+            int pontosDeVidaAntes = jogador.getPontosDeVida();
+            int pontosDeVidaClasse = jogador.getClasse().getPontosDeVida();
+            jogador.setPontosDeVida(pontosDeVidaClasse);
+            linhaSeparadora();
+            System.out.println("Seus pontos de vida subiram de " + pontosDeVidaAntes + " pontos para " + pontosDeVidaClasse + " pontos!");
+            linhaSeparadora();
+            continuar();
+            return;
+        }
+
+        System.out.println("Você fica receoso de beber algo produzido pelo inimigo.");
+        linhaSeparadora();
+        continuar();
+    }
+
+    public static void atoSeisCombateLider() {
+        int confirmacao;
+        int escolha;
+        do {
+            linhaSeparadora();
+            System.out.println("""
+                    O que você desejar fazer?
+                    1. ESPERAR
+                    2. ATACAR""");
+            try {
+                escolha = Integer.parseInt(input.nextLine());
+            } catch (Exception e) {
+                escolha = 3;
+            }
+            if (escolha > 2) {
+                System.out.println("A opção escolhida é inválida!");
+                confirmacao = 2;
+            } else {
+                String tipoEscolha = escolha == 1 ? "ESPERAR" : "ATACAR";
+                System.out.println("Você irá \"" + tipoEscolha + "\"? Aperte 1 para confirmar ou qualquer digito para escolher novamente.");
+                confirmacao = confirmaEscolha();
+            }
+        } while (confirmacao != 1 || escolha == 1);
+
+        Combate combate = new Combate(Logica.jogador, new PersonagemNaoJogavel(TipoInimigoEnum.LIDER));
+        combate.iniciarCombate();
         continuar();
     }
 }

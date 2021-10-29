@@ -11,8 +11,8 @@ public enum TipoArmaEnum {
     VARINHA("varinha", 10),
     CAJADO("cajado", 10);
 
-    private String nomeArma;
-    private int danoArma;
+    private final String nomeArma;
+    private final int danoArma;
 
     TipoArmaEnum(String nomeArma, int danoArma) {
         this.nomeArma = nomeArma;

@@ -7,14 +7,14 @@ import java.util.Arrays;
 
 @Getter
 public enum TipoClasseEnum {
-    BARBARO(50, 15, 10, new ArrayList<>(Arrays.asList(TipoArmaEnum.ESPADA, TipoArmaEnum.MACHADO))),
-    LADINO(40, 10, 15, new ArrayList<>(Arrays.asList(TipoArmaEnum.ADAGA, TipoArmaEnum.ARCO))),
-    MAGO(30, 5, 20, new ArrayList<>(Arrays.asList(TipoArmaEnum.CAJADO, TipoArmaEnum.VARINHA)));
+    BARBARO(130, 15, 10, new ArrayList<>(Arrays.asList(TipoArmaEnum.ESPADA, TipoArmaEnum.MACHADO))),
+    LADINO(120, 10, 15, new ArrayList<>(Arrays.asList(TipoArmaEnum.ADAGA, TipoArmaEnum.ARCO))),
+    MAGO(110, 5, 20, new ArrayList<>(Arrays.asList(TipoArmaEnum.CAJADO, TipoArmaEnum.VARINHA)));
 
-    private int pontosDeVida;
-    private int pontosDeArmadura;
-    private int danoAtaque;
-    private ArrayList<TipoArmaEnum> tipoArmaEnums;
+    private final int pontosDeVida;
+    private final int pontosDeArmadura;
+    private final int danoAtaque;
+    private final ArrayList<TipoArmaEnum> tipoArmaEnums;
 
     TipoClasseEnum(int pontosDeVida, int pontosDeArmadura, int danoAtaque, ArrayList<TipoArmaEnum> tipoArmaEnums) {
         this.pontosDeVida = pontosDeVida;
